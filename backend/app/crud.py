@@ -1,0 +1,115 @@
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+
+from . import models, schemas
+
+
+def get_or_create_posto(db: Session, identificador: str, nome: str, cidade: str, estado: str):
+    posto = db.query(models.Posto).filter_by(cnpj=identificador).first()
+    if not posto:
+        posto = models.Posto(
+            cnpj=identificador,
+            nome=nome,
+            cidade=cidade,
+            estado=estado
+        )
+        db.add(posto)
+        db.commit()
+        db.refresh(posto)
+    return posto
+
+
+def get_or_create_motorista(db: Session, nome: str, cpf: str):
+    motorista = db.query(models.Motorista).filter_by(cpf=cpf).first()
+    if not motorista:
+        motorista = models.Motorista(
+            nome=nome,
+            cpf=cpf
+        )
+        db.add(motorista)
+        db.commit()
+        db.refresh(motorista)
+    return motorista
+
+
+def get_or_create_veiculo(db: Session, placa: str, tipo: str):
+    veiculo = db.query(models.Veiculo).filter_by(placa=placa).first()
+    if not veiculo:
+        veiculo = models.Veiculo(
+            placa=placa,
+            tipo=tipo
+        )
+        db.add(veiculo)
+        db.commit()
+        db.refresh(veiculo)
+    return veiculo
+
+
+def create_venda(db: Session, payload: schemas.IngestionPayload):
+    posto = get_or_create_posto(
+        db,
+        identificador=payload.posto_identificador,
+        nome=payload.posto_nome,
+        cidade=payload.cidade,
+        estado=payload.estado,
+    )
+    motorista = get_or_create_motorista(db, nome=payload.motorista_nome, cpf=payload.motorista_cpf)
+    veiculo = get_or_create_veiculo(db, placa=payload.placa_veiculo, tipo=payload.tipo_veiculo)
+
+    venda = models.Venda(
+        posto_id=posto.posto_id,
+        motorista_id=motorista.motorista_id,
+        veiculo_id=veiculo.veiculo_id,
+        data_coleta=payload.data_coleta,
+        tipo_combustivel=payload.tipo_combustivel,
+        preco=payload.preco,
+        volume_vendido=payload.volume_vendido
+    )
+
+    db.add(venda)
+    db.commit()
+    db.refresh(venda)
+    return venda
+
+
+def media_preco_por_combustivel(db: Session):
+    rows = (
+        db.query(
+            models.Venda.tipo_combustivel,
+            func.avg(models.Venda.preco).label("preco_medio")
+        )
+        .group_by(models.Venda.tipo_combustivel)
+        .order_by(func.avg(models.Venda.preco).label("preco_medio").desc())
+        .all()
+    )
+    return rows
+
+
+def consumo_por_tipo_veiculo(db: Session):
+    rows = (
+        db.query(
+            models.Veiculo.tipo,
+            func.sum(models.Venda.volume_vendido).label("total_volume")
+        )
+        .join(models.Venda, models.Veiculo.veiculo_id == models.Venda.veiculo_id)
+        .group_by(models.Veiculo.tipo)
+        .order_by(func.sum(models.Venda.volume_vendido).desc())
+        .all()
+    )
+    return rows
+
+
+def historico_motorista(db: Session, cpf: str = None, nome: str = None):
+    query = (
+        db.query(models.Venda, models.Posto, models.Motorista, models.Veiculo)
+        .join(models.Posto, models.Venda.posto_id == models.Posto.posto_id)
+        .join(models.Motorista, models.Venda.motorista_id == models.Motorista.motorista_id)
+        .join(models.Veiculo, models.Venda.veiculo_id == models.Veiculo.veiculo_id)
+    )
+
+    if cpf:
+        query = query.filter(models.Motorista.cpf == cpf)
+    if nome:
+        query = query.filter(models.Motorista.nome.ilike(f"%{nome}%"))
+
+    return query.order_by(models.Venda.data_coleta.desc()).all()

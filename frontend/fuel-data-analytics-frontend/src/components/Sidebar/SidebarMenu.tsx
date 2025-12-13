@@ -11,6 +11,9 @@ import {DatabaseIcon} from "../../assets/icons/DatabaseIcon.tsx";
 
 export const Sidebar: React.FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
+    const handleMenuClick = () => {
+        setCollapsed(true)
+    };
 
     return (
         <div className={`sidebar text-light ${collapsed ? "collapsed" : ""}`}>
@@ -26,7 +29,8 @@ export const Sidebar: React.FC = () => {
             <ul className="nav flex-column">
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/"}>
+                    <Link className="nav-link d-flex align-items-center" to={"/"}
+                          onClick={handleMenuClick}>
                         <AnalyticsIcon/>
                         <span className="sidebar-text">Análise</span>
                     </Link>
@@ -34,28 +38,32 @@ export const Sidebar: React.FC = () => {
 
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/motoristas"}>
+                    <Link className="nav-link d-flex align-items-center" to={"/motoristas"}
+                          onClick={handleMenuClick}>
                         <PersonIcon/>
                         <span className="sidebar-text">Motoristas</span>
                     </Link>
                 </li>
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/postos"}>
+                    <Link className="nav-link d-flex align-items-center" to={"/postos"}
+                          onClick={handleMenuClick}>
                         <FuelPumpIcon/>
                         <span className="sidebar-text">Postos</span>
                     </Link>
                 </li>
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/veiculos"}>
+                    <Link className="nav-link d-flex align-items-center" to={"/veiculos"}
+                          onClick={handleMenuClick}>
                         <CarIcon/>
                         <span className="sidebar-text">Veículos</span>
                     </Link>
                 </li>
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center"  to={"/controle-registros"}>
+                    <Link className="nav-link d-flex align-items-center"  to={"/controle-registros"}
+                          onClick={handleMenuClick}>
                         <DatabaseIcon/>
                         <span className="sidebar-text">Controle de Registros</span>
                     </Link>

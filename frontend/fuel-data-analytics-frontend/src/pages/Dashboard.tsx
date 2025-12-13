@@ -15,10 +15,8 @@ export default function DashboardPage() {
         <div className="container py-4">
             <h1 className="mb-4 text-center fw-bold">Ministério dos Transportes</h1>
 
-            {/* GRID DE CARDS */}
             <div className="row g-4">
 
-                {/* Card - Preços Médios */}
                 <div className="col-md-6">
                     <div className="card shadow-sm h-100">
                         <div className="card-header bg-primary text-white">
@@ -39,10 +37,9 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Card - Consumo por Tipo de Veículo */}
                 <div className="col-md-6">
                     <div className="card shadow-sm h-100">
-                        <div className="card-header bg-success text-white">
+                        <div className="card-header bg-primary text-white">
                             <h5 className="mb-0 text-center">Consumo Total por Tipo de Veículo</h5>
                         </div>
                         <div className="card-body">
@@ -60,8 +57,6 @@ export default function DashboardPage() {
                     </div>
                 </div>
             </div>
-
-            {/* Tabela de Vendas (Opcional para a próxima etapa) */}
         </div>
     );
 }

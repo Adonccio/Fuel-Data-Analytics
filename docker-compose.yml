@@ -14,7 +14,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d combustivel"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d combustivel360"]
       interval: 3s
       timeout: 3s
       retries: 10
@@ -25,7 +25,7 @@ services:
     container_name: fuel_backend
     restart: always
     environment:
-      DATABASE_URL: postgresql://admin:admin@db:5432/combustivel360
+      DATABASE_URL: postgresql://admin:admin@fuel_db:5432/combustivel360
     depends_on:
       db:
         condition: service_healthy

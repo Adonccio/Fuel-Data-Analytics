@@ -50,10 +50,9 @@ class ConsumoPorTipoVeiculo(BaseModel):
 
 
 class RegistroHistorico(BaseModel):
-    historico_id = int
-    tp_registro = str
-    status_registro = str
-    data_atualizacao = datetime
+    historico_id : int
+    tp_registro : str
+    status_registro : str
 
 
 

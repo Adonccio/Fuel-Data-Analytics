@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from .. import crud, models
-from ..schemas import PrecoMedioCombustivel, ConsumoPorTipoVeiculo, VendaResponse, HistoricoRegistro
+from ..schemas import PrecoMedioCombustivel, ConsumoPorTipoVeiculo, VendaResponse, RegistroHistorico
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
@@ -33,7 +33,7 @@ def get_consumo_veiculo(db: Session = Depends(get_db)):
 
 
 
-@router.get("/historico-registros", response_model=list[Historic])
+@router.get("/historico-registros", response_model=list[RegistroHistorico])
 def get_vehicle_consumption(db: Session = Depends(get_db)):
     rows = crud.consumo_por_tipo_veiculo(db)
     return [

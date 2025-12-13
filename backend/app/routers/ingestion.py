@@ -10,4 +10,4 @@ router = APIRouter(prefix="/ingestion", tags=["ingestion"])
 @router.post("/")
 def ingest_data(payload: schemas.IngestionPayload, db: Session = Depends(get_db)):
     venda = crud.create_venda(db, payload)
-    return {"status": "ok", "venda_id": venda.id}
+    return {"status": "ok", "venda_id": venda.venda_id}

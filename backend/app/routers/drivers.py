@@ -19,7 +19,7 @@ def driver_history(
     for venda, posto, motorista, veiculo in rows:
         result.append(
             VendaResponse(
-                id=venda.id,
+                id=venda.venda_id,
                 data_coleta=venda.data_coleta,
                 tipo_combustivel=venda.tipo_combustivel,
                 preco=float(venda.preco),

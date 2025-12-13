@@ -42,4 +42,4 @@ def enviar_dados(qtd=10):
             print("Erro:", r.status_code, r.text)
 
 if __name__ == "__main__":
-    enviar_dados(20)  # Enviar 20 registros
+    enviar_dados(200)# Enviar 200 registros

@@ -31,6 +31,19 @@ class MotoristaResponse(BaseModel):
         "from_attributes": True
     }
 
+class PostoResponse(BaseModel):
+    id: int
+    nome: str
+    cnpj: str
+    cidade: str
+    estado: str
+    data_atualizacao: datetime
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
 class VendaResponse(BaseModel):
     id: int
     data_coleta: datetime
@@ -74,3 +87,9 @@ class FiltroMotorista(BaseModel):
 class MotoristaCreate(BaseModel):
     nome: str
     cpf: str
+
+class PostoCreate(BaseModel):
+    nome: str
+    cnpj: str
+    cidade: str
+    estado: str

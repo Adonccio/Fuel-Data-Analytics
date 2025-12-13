@@ -82,11 +82,21 @@ class ConsumoPorTipoVeiculo(BaseModel):
 
 
 
-class RegistroHistorico(BaseModel):
-    historico_id : int
-    tp_registro : str
-    status_registro : str
+class RegistroHistoricoBase(BaseModel):
+    tp_registro: str
+    status_registro: str
 
+
+class RegistroHistoricoCreate(RegistroHistoricoBase):
+    pass
+
+
+class RegistroHistorico(RegistroHistoricoBase):
+    historico_id: int
+    data_atualizacao: datetime
+
+    class Config:
+        orm_mode = True
 
 
 class FiltroMotorista(BaseModel):

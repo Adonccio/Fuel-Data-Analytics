@@ -70,34 +70,6 @@ def create_venda(db: Session, payload: schemas.IngestionPayload):
     db.refresh(venda)
     return venda
 
-
-def media_preco_por_combustivel(db: Session):
-    rows = (
-        db.query(
-            models.Venda.tipo_combustivel,
-            func.avg(models.Venda.preco).label("preco_medio")
-        )
-        .group_by(models.Venda.tipo_combustivel)
-        .order_by(func.avg(models.Venda.preco).label("preco_medio").desc())
-        .all()
-    )
-    return rows
-
-
-def consumo_por_tipo_veiculo(db: Session):
-    rows = (
-        db.query(
-            models.Veiculo.tipo,
-            func.sum(models.Venda.volume_vendido).label("total_volume")
-        )
-        .join(models.Venda, models.Veiculo.veiculo_id == models.Venda.veiculo_id)
-        .group_by(models.Veiculo.tipo)
-        .order_by(func.sum(models.Venda.volume_vendido).desc())
-        .all()
-    )
-    return rows
-
-
 def historico_venda(db: Session, cpf: str = None, nome: str = None):
     query = (
         db.query(models.Venda, models.Posto, models.Motorista, models.Veiculo)
@@ -112,3 +84,13 @@ def historico_venda(db: Session, cpf: str = None, nome: str = None):
         query = query.filter(models.Motorista.nome.ilike(f"%{nome}%"))
 
     return query.order_by(models.Venda.data_coleta.desc()).all()
+
+def registrar_historico(db: Session, tp_registro: str, status: str):
+    historico = models.RegistroHistorico(
+        tp_registro=tp_registro,
+        status_registro=status
+    )
+    db.add(historico)
+    db.commit()
+    db.refresh(historico)
+    return historico

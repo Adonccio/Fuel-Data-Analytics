@@ -13,7 +13,7 @@ export default function DashboardPage() {
 
     return (
         <div className="container py-4">
-            <h1 className="mb-4 text-center fw-bold">Ministério dos Transportes</h1>
+            <h1 className="mb-4 text-center text-primary fw-bold">Fuel Data Analytics</h1>
 
             <div className="row g-4">
 

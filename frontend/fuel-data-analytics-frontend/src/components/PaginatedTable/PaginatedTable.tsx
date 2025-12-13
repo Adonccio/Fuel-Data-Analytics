@@ -67,7 +67,7 @@ export default function PaginatedTable({
 
                     <input
                         type="text"
-                        className="form-control"
+                        className="form-control search-input"
                         placeholder={searchPlaceholder}
                         value={inputValue}
                         onChange={(e) => {

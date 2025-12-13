@@ -47,10 +47,15 @@ export const PostoAPI = {
         return res.data;
     },
 
-    create: async (posto: { nome: string; cnpj: string, estado:string, cidade: string }) => {
+    create: async (posto: { nome: string; cnpj: string, estado: string, cidade: string }) => {
         const res = await api.post("/postos", posto);
         return res.data;
-    }
+    },
+
+    findByCnpj: async (cnpj: string) => {
+        const res = await api.get("/posto/", {params: {cnpj}});
+        return re
+    },
 };
 
 

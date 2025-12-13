@@ -4,17 +4,18 @@ import "./Modal.css";
 interface ModalProps {
     title: string;
     isOpen: boolean;
+    width?: string;
     onClose: () => void;
     children: React.ReactNode;
 }
 
-export default function Modal({ title, isOpen, onClose, children }: ModalProps) {
+export default function Modal({ title, isOpen, onClose, children, width }: ModalProps) {
     if (!isOpen) return null;
 
     return (
         <div className="custom-modal-backdrop">
             <div className="custom-modal">
-                <div className="modal-header position-relative text-center mt-3">
+                <div className="modal-header position-relative text-center mt-3" style={{ width: width as string }} >
                     <h5 className="modal-title w-100">{title}</h5>
 
                     <button

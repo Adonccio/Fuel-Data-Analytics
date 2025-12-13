@@ -35,10 +35,10 @@ export default function MotoristasView() {
                 label="Cadastrar Motorista"
                 onOpen={() => setModalOpen(true)}
             />
-            {/* MODAL */}
             <Modal
                 title="Cadastrar Motorista"
                 isOpen={modalOpen}
+                width={"400px"}
                 onClose={() => setModalOpen(false)}
             >
                 <div className="modal-content m-3">
@@ -49,7 +49,6 @@ export default function MotoristasView() {
                 </div>
             </Modal>
 
-            {/* TABELA PAGINADA */}
             <PaginatedTable
                 headers={[
                     { key: "id", label: "ID" },

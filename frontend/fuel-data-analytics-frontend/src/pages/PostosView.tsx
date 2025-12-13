@@ -3,6 +3,8 @@ import {MotoristaAPI, PostoAPI} from "../api";
 import {formatCNPJ} from "../utils/format.ts";
 import PaginatedTable, {type Header} from "../components/PaginatedTable/PaginatedTable.tsx";
 import PostosForm from "../components/PostosForm/PostosForm";
+import AddButton from "../components/AddButton/AddButton.tsx";
+import Modal from "../components/Modal/Modal.tsx";
 
 interface Posto {
     id: number;
@@ -25,6 +27,7 @@ export default function PostosView() {
     const [successMessage, setSuccessMessage] = useState("");
     const [formError, setFormError] = useState<string | null>(null);
     const [formSuccess, setFormSuccess] = useState<string | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
 
     // Paginação
     const [page, setPage] = useState(1);
@@ -74,23 +77,29 @@ export default function PostosView() {
     ]
 
     return (
-        <div className="table-container">
+        <div className="table-container d-flex flex-column align-items-center">
             {successMessage && (
                 <div className="alert alert-success">{successMessage}</div>
             )}
 
-
-
-            <PostosForm
-                onSubmit={handleCreate}
-                inputLimit={14}
-                onSearch={async (term) => {
-                    return await MotoristaAPI.findByCpf(term); // busca no backend
-                }}
-                searchPlaceholder="Buscar por nome ou CPF..."
+            <AddButton
+                label="Cadastrar Posto"
+                onOpen={() => setModalOpen(true)}
             />
-
-            <PaginatedTable headers={headers} data={postos}/>
+            <Modal
+                title="Cadastrar Posto"
+                isOpen={modalOpen}
+                width={"600px"}
+                onClose={() => setModalOpen(false)}
+            >
+                <div className="modal-content m-3">
+                    <PostosForm
+                        onSubmit={handleCreate}
+                        onSuccessClose={() => setModalOpen(false)}
+                    />
+                </div>
+            </Modal>
+            <PaginatedTable inputLimit={14} searchPlaceholder={"Buscar por CNPJ"}  onSearch={async (term) => PostoAPI.findByCnpj(term)} headers={headers} data={postos}/>
         </div>
     );
 }

@@ -4,21 +4,6 @@ from sqlalchemy import func
 from . import models, schemas
 
 
-def get_or_create_posto(db: Session, identificador: str, nome: str, cidade: str, estado: str):
-    posto = db.query(models.Posto).filter_by(cnpj=identificador).first()
-    if not posto:
-        posto = models.Posto(
-            cnpj=identificador,
-            nome=nome,
-            cidade=cidade,
-            estado=estado
-        )
-        db.add(posto)
-        db.commit()
-        db.refresh(posto)
-    return posto
-
-
 def get_or_create_motorista(db: Session, nome: str, cpf: str):
     motorista = db.query(models.Motorista).filter_by(cpf=cpf).first()
     if not motorista:
@@ -31,6 +16,20 @@ def get_or_create_motorista(db: Session, nome: str, cpf: str):
         db.refresh(motorista)
     return motorista
 
+
+def get_or_create_posto(db: Session, nome: str, cnpj: str, estado:str, cidade:str):
+    posto = db.query(models.Posto).filter_by(cnpj=cnpj).first()
+    if not posto:
+        posto = models.Posto(
+            nome=nome,
+            cnpj=cnpj,
+            cidade=cidade,
+            estado=estado,
+        )
+        db.add(posto)
+        db.commit()
+        db.refresh(posto)
+    return posto
 
 def get_or_create_veiculo(db: Session, placa: str, tipo: str):
     veiculo = db.query(models.Veiculo).filter_by(placa=placa).first()
@@ -113,7 +112,3 @@ def historico_venda(db: Session, cpf: str = None, nome: str = None):
         query = query.filter(models.Motorista.nome.ilike(f"%{nome}%"))
 
     return query.order_by(models.Venda.data_coleta.desc()).all()
-
-
-def listar_motoristas(db: Session):
-    return db.query(models.Motorista).order_by(models.Motorista.nome).all()

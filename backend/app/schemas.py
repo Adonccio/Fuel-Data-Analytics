@@ -61,6 +61,16 @@ class VendaResponse(BaseModel):
         orm_mode = True
 
 
+class VeiculoResponse(BaseModel):
+    id: int
+    placa: str
+    tipo: str
+    data_atualizacao: datetime
+
+    class Config:
+        orm_mode = True
+
+
 class PrecoMedioCombustivel(BaseModel):
     tipo_combustivel: str
     preco_medio: float
@@ -93,3 +103,8 @@ class PostoCreate(BaseModel):
     cnpj: str
     cidade: str
     estado: str
+
+
+class VeiculoCreate(BaseModel):
+    placa: str
+    tipo: str

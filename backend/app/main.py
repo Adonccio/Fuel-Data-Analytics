@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import Base, engine
-from .routers import ingestion, dashboard, vendas, motoristas, postos
+from .routers import ingestion, dashboard, vendas, motoristas, postos, veiculos
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -29,6 +29,7 @@ app.include_router(dashboard.router)
 app.include_router(vendas.router)
 app.include_router(motoristas.router)
 app.include_router(postos.router)
+app.include_router(veiculos.router)
 
 
 @app.get("/")

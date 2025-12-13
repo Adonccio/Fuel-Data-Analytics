@@ -14,7 +14,10 @@ interface PaginatedTableProps {
 
     onSearch?: (term: string) => Promise<any[]>;
     searchPlaceholder?: string;
-    inputLimit: number;
+    inputLimit?: number;
+
+    searchType?: "input" | "select";
+    selectOptions?: string[];
 }
 
 export default function PaginatedTable({
@@ -23,14 +26,18 @@ export default function PaginatedTable({
                                            defaultPageSize = 10,
                                            onSearch,
                                            searchPlaceholder = "Buscar...",
-                                           inputLimit
+                                           inputLimit = 50,
+                                           searchType = "input",
+                                           selectOptions = [],
                                        }: PaginatedTableProps) {
-
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(defaultPageSize);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [inputValue, setInputValue] = useState("");
+
+    // NOVO: estado para o valor selecionado no dropdown
+    const [selectValue, setSelectValue] = useState<string>("todos");
 
     const [filteredData, setFilteredData] = useState<any[]>(data);
 
@@ -45,7 +52,6 @@ export default function PaginatedTable({
         setFilteredData(data);
     }, [data]);
 
-    // dispara busca apenas quando searchTerm muda
     useEffect(() => {
         if (!onSearch) return;
         if (searchTerm === "") return;
@@ -57,14 +63,13 @@ export default function PaginatedTable({
         };
 
         fetch();
-    }, [searchTerm]);
+    }, [searchTerm, onSearch]);
 
     return (
         <div className="w-100">
-
-            {onSearch && (
+            {/* =============== BUSCA: INPUT =============== */}
+            {onSearch && searchType === "input" && (
                 <div className="search-container d-flex justify-content-center mb-4 gap-2">
-
                     <input
                         type="text"
                         className="form-control search-input"
@@ -83,7 +88,7 @@ export default function PaginatedTable({
                             }
                         }}
                         onKeyDown={(e) => {
-                            if (e.key === "Enter" && inputValue.length === inputLimit) {
+                            if (e.key === "Enter" && inputValue.length > 0) {
                                 setSearchTerm(inputValue);
                             }
                         }}
@@ -91,8 +96,48 @@ export default function PaginatedTable({
 
                     <button
                         className="btn btn-primary"
-                        disabled={inputValue.length !== inputLimit}
+                        disabled={inputValue.length === 0}
                         onClick={() => setSearchTerm(inputValue)}
+                    >
+                        Buscar
+                    </button>
+                </div>
+            )}
+
+            {/* =============== BUSCA: SELECT + BOTÃO =============== */}
+            {onSearch && searchType === "select" && (
+                <div className="search-container d-flex justify-content-center mb-4 gap-2">
+                    <select
+                        className="form-select w-auto"
+                        value={selectValue}
+                        onChange={(e) => {
+                            setSelectValue(e.target.value);
+                        }}
+                    >
+                        <option value="todos">Todos</option>
+                        {selectOptions.map((opt) => (
+                            <option key={opt} value={opt}>
+                                {opt}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={async () => {
+                            if (!onSearch) return;
+
+                            // Se "Todos" → limpa filtro e volta dados originais
+                            if (selectValue === "todos") {
+                                setSearchTerm("");
+                                setFilteredData(data);
+                                setPage(1);
+                                return;
+                            }
+
+                            // dispara busca usando o valor selecionado
+                            setSearchTerm(selectValue);
+                        }}
                     >
                         Buscar
                     </button>
@@ -115,8 +160,37 @@ export default function PaginatedTable({
                         {headers.map((h) => {
                             const value = row[h.key];
                             return (
-                                <td key={h.key} data-label={h.label}>
-                                    {h.render ? h.render(value, row) : value}
+                                <td
+                                    key={h.key}
+                                    data-label={h.label}
+                                >
+                                    {(() => {
+                                        // Se o usuário definiu render, respeita
+                                        if (h.render) return h.render(value, row);
+
+                                        // Se a coluna é "status_registro", aplica cor automática
+                                        if (h.key === "status_registro") {
+                                            const isSuccess = value?.toLowerCase() === "sucesso";
+                                            const isError = value?.toLowerCase() === "erro";
+
+                                            const style = {
+                                                padding: "4px 10px",
+                                                borderRadius: "6px",
+                                                fontWeight: "bold",
+                                                display: "inline-block",
+                                                backgroundColor: isSuccess ? "#c8f7c5" : isError ? "#f7c5c5" : "#eee",
+                                                color: isSuccess ? "#145a32" : isError ? "#7b241c" : "#333",
+                                                border: `1px solid ${
+                                                    isSuccess ? "#27ae60" : isError ? "#c0392b" : "#bbb"
+                                                }`,
+                                            };
+
+                                            return <span style={style}>{value}</span>;
+                                        }
+
+                                        // default
+                                        return value;
+                                    })()}
                                 </td>
                             );
                         })}
@@ -125,6 +199,7 @@ export default function PaginatedTable({
                 </tbody>
             </table>
 
+            {/* PAGINAÇÃO */}
             <div className="pagination-container">
                 <button
                     className="btn btn-dark"

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { DashboardAPI } from "../api";
-import type {PrecoMedioCombustivel, ConsumoPorTipoVeiculo} from "../types/dashboard";
+import type { PrecoMedioCombustivel, ConsumoPorTipoVeiculo } from "../types/dashboard";
+import BarChartPreco from "../components/BarChartPreco/BarChartPreco.tsx";
+import BarChartVeiculos from "../components/BarChartVeiculoConsumo/BarChartVeiculoConsumo.tsx";
 
 export default function DashboardPage() {
     const [prices, setPrices] = useState<PrecoMedioCombustivel[]>([]);
@@ -15,8 +17,12 @@ export default function DashboardPage() {
         <div className="container py-4">
             <h1 className="mb-4 text-center text-primary fw-bold">Fuel Data Analytics</h1>
 
+            {/* ========================= */}
+            {/* 1ª LINHA - TABELAS        */}
+            {/* ========================= */}
             <div className="row g-4">
 
+                {/* Tabela Preço Médio */}
                 <div className="col-md-6">
                     <div className="card shadow-sm h-100">
                         <div className="card-header bg-primary text-white">
@@ -37,6 +43,7 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
+                {/* Tabela Consumo */}
                 <div className="col-md-6">
                     <div className="card shadow-sm h-100">
                         <div className="card-header bg-primary text-white">
@@ -56,6 +63,38 @@ export default function DashboardPage() {
                         </div>
                     </div>
                 </div>
+
+            </div>
+
+            {/* ========================= */}
+            {/* 2ª LINHA - GRÁFICOS       */}
+            {/* ========================= */}
+            <div className="row g-4 mt-4">
+
+                {/* Gráfico Preço Médio */}
+                <div className="col-md-6">
+                    <div className="card shadow-sm h-100">
+                        <div className="card-header bg-primary text-white">
+                            <h5 className="mb-0 text-center">Gráfico: Preço Médio por Combustível</h5>
+                        </div>
+                        <div className="card-body">
+                            <BarChartPreco data={prices} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Gráfico Consumo */}
+                <div className="col-md-6">
+                    <div className="card shadow-sm h-100">
+                        <div className="card-header bg-primary text-white">
+                            <h5 className="mb-0 text-center">Gráfico: Consumo por Tipo de Veículo</h5>
+                        </div>
+                        <div className="card-body">
+                            <BarChartVeiculos data={vehicles} />
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );

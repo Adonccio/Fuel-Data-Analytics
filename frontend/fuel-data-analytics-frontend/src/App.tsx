@@ -17,7 +17,7 @@ export default function App() {
                     <Route path="/motoristas" element={<MotoristasView />} />
                     <Route path="/postos" element={<PostosView />} />
                     <Route path="/veiculos" element={<VeiculosView />} />
-                    <Route path="/registros" element={<ControleRegistrosView />} />
+                    <Route path="/controle-registros" element={<ControleRegistrosView />} />
                 </Routes>
             </div>
         </div>

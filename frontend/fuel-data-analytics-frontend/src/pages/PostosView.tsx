@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PostoAPI } from "../api";
+import {MotoristaAPI, PostoAPI} from "../api";
 import {formatCNPJ} from "../utils/format.ts";
 import PaginatedTable, {type Header} from "../components/PaginatedTable/PaginatedTable.tsx";
 import PostosForm from "../components/PostosForm/PostosForm";
@@ -83,6 +83,11 @@ export default function PostosView() {
 
             <PostosForm
                 onSubmit={handleCreate}
+                inputLimit={14}
+                onSearch={async (term) => {
+                    return await MotoristaAPI.findByCpf(term); // busca no backend
+                }}
+                searchPlaceholder="Buscar por nome ou CPF..."
             />
 
             <PaginatedTable headers={headers} data={postos}/>

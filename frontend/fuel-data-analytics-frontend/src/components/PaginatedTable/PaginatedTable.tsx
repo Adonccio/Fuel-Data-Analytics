@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import "./PaginatedTable.css";
 
 export interface Header {
     key: string;
@@ -10,27 +11,95 @@ interface PaginatedTableProps {
     headers: Header[];
     data: any[];
     defaultPageSize?: number;
+
+    onSearch?: (term: string) => Promise<any[]>;
+    searchPlaceholder?: string;
+    inputLimit: number;
 }
 
 export default function PaginatedTable({
                                            headers,
                                            data,
                                            defaultPageSize = 10,
+                                           onSearch,
+                                           searchPlaceholder = "Buscar...",
+                                           inputLimit
                                        }: PaginatedTableProps) {
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(defaultPageSize);
 
-    const totalPages = Math.ceil(data.length / pageSize);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [inputValue, setInputValue] = useState("");
+
+    const [filteredData, setFilteredData] = useState<any[]>(data);
+
+    const totalPages = Math.ceil(filteredData.length / pageSize);
 
     const currentPageData = useMemo(() => {
         const start = (page - 1) * pageSize;
-        return data.slice(start, start + pageSize);
-    }, [data, page, pageSize]);
+        return filteredData.slice(start, start + pageSize);
+    }, [filteredData, page, pageSize]);
+
+    useEffect(() => {
+        setFilteredData(data);
+    }, [data]);
+
+    // dispara busca apenas quando searchTerm muda
+    useEffect(() => {
+        if (!onSearch) return;
+        if (searchTerm === "") return;
+
+        const fetch = async () => {
+            const result = await onSearch(searchTerm);
+            setFilteredData(result);
+            setPage(1);
+        };
+
+        fetch();
+    }, [searchTerm]);
 
     return (
         <div className="w-100">
 
+            {onSearch && (
+                <div className="search-container d-flex justify-content-center mb-4 gap-2">
+
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder={searchPlaceholder}
+                        value={inputValue}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value.length <= inputLimit) {
+                                setInputValue(value);
+                            }
+
+                            if (value.length === 0) {
+                                setSearchTerm("");
+                                setFilteredData(data);
+                                setPage(1);
+                            }
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && inputValue.length === inputLimit) {
+                                setSearchTerm(inputValue);
+                            }
+                        }}
+                    />
+
+                    <button
+                        className="btn btn-primary"
+                        disabled={inputValue.length !== inputLimit}
+                        onClick={() => setSearchTerm(inputValue)}
+                    >
+                        Buscar
+                    </button>
+                </div>
+            )}
+
+            {/* TABELA */}
             <table className="table-modern w-100">
                 <thead>
                 <tr>
@@ -45,7 +114,6 @@ export default function PaginatedTable({
                     <tr key={idx}>
                         {headers.map((h) => {
                             const value = row[h.key];
-
                             return (
                                 <td key={h.key} data-label={h.label}>
                                     {h.render ? h.render(value, row) : value}
@@ -71,7 +139,7 @@ export default function PaginatedTable({
                 </span>
 
                 <button
-                    className="btn btn-dark"
+                    className="btn btn-primary"
                     disabled={page === totalPages}
                     onClick={() => setPage(page + 1)}
                 >
@@ -97,7 +165,6 @@ export default function PaginatedTable({
                     </select>
                 </div>
             </div>
-
         </div>
     );
 }

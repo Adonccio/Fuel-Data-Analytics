@@ -31,6 +31,11 @@ export const MotoristaAPI = {
     create: async (motorista: { nome: string; cpf: string }) => {
         const res = await api.post("/motoristas", motorista);
         return res.data;
+    },
+
+    findByCpf: async ( cpf: string ) => {
+        const res = await api.get("/motoristas/", { params: { cpf } });
+        return res.data;
     }
 };
 

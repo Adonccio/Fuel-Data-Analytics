@@ -2,74 +2,77 @@ import { useState } from "react";
 
 interface MotoristaFormProps {
     onSubmit: (data: { nome: string; cpf: string }) => Promise<void>;
-    loading?: boolean;
-    error?: string | null;
-    success?: string | null;
+    onSuccessClose: () => void;
 }
 
-export default function MotoristaForm({
-                                          onSubmit,
-                                          loading = false,
-                                          error = null,
-                                          success = null,
-                                      }: MotoristaFormProps) {
-
+export default function MotoristasForm({ onSubmit, onSuccessClose }: MotoristaFormProps) {
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
+    const [saving, setSaving] = useState(false);
+    const [success, setSuccess] = useState("");
+    const [error, setError] = useState("");
 
-    function formatCpfInput(value: string) {
-        return value.replace(/\D/g, "").slice(0, 11);
-    }
-
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        onSubmit({ nome, cpf });
+
+        if (!nome || !cpf) {
+            setError("Preencha todos os campos.");
+            return;
+        }
+
+        try {
+            setSaving(true);
+            setError("");
+
+            await onSubmit({ nome, cpf });
+
+            setSuccess("Motorista cadastrado com sucesso!");
+
+            setTimeout(() => {
+                setSuccess("");
+                setNome("");
+                setCpf("");
+                onSuccessClose();
+            }, 1200);
+
+        } catch (err) {
+            setError("Erro ao cadastrar motorista.");
+        } finally {
+            setSaving(false);
+        }
     }
 
     return (
-        <form className="modern-form" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}  className="d-flex flex-column align-items-center w-100">
+            {success && <div className="alert alert-success">{success}</div>}
+            {error && <div className="alert alert-danger">{error}</div>}
 
-            <h4 className="mb-3 ">Cadastrar Motorista</h4>
-
-            {error && <p className="alert alert-danger">{error}</p>}
-            {success && <p className="alert alert-success">{success}</p>}
-
-            <div className="mb-3 w-50">
-                <label className="form-label fw-bold">Nome</label>
+            <div className="m-auto">
+                <label className="form-label fw-bold">Nome Completo</label>
                 <input
                     type="text"
-                    className="form-control w-50"
+                    className="form-control w-100"
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
                     required
                 />
             </div>
 
-            <div className="mb-3 w-50">
+            <div className="mb-3">
                 <label className="form-label fw-bold">CPF</label>
                 <input
                     type="text"
-                    className="form-control w-50"
+                    className="form-control w-100"
                     value={cpf}
-                    onChange={(e) => setCpf(formatCpfInput(e.target.value))}
+                    maxLength={11}
+                    onChange={(e) => setCpf(e.target.value.replace(/\D/g, "").slice(0, 11))}
                     required
                 />
-                {cpf && cpf.length < 11 && (
-                    <small className="text-danger">
-                        CPF deve conter 11 dígitos numéricos.
-                    </small>
-                )}
             </div>
 
-            <div className="d-flex justify-content-left my-3 w-50">
-                <button
-                    type="submit"
-                    className="btn btn-primary "
-                    disabled={loading || cpf.length !== 11}
-                >
-                    {loading ? "Salvando..." : "Cadastrar"}
-                </button>
-            </div>
+            <button type="submit" className="btn btn-primary w-25" disabled={saving}>
+                {saving ? "Salvando..." : "Cadastrar"}
+            </button>
         </form>
     );
 }

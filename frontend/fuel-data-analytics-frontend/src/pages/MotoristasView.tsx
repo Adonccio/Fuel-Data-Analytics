@@ -1,87 +1,71 @@
 import { useEffect, useState } from "react";
 import { MotoristaAPI } from "../api";
-import {formatCPF} from "../utils/format.ts";
-import PaginatedTable, {type Header} from "../components/PaginatedTable/PaginatedTable.tsx";
-import MotoristaForm from "../components/MotoristasForm/MotoristasForm";
-
-interface Motorista {
-    id: number;
-    nome: string;
-    cpf: string;
-    data_atualizacao: string;
-}
+import { formatCPF } from "../utils/format";
+import PaginatedTable from "../components/PaginatedTable/PaginatedTable";
+import Modal from "../components/Modal/Modal";
+import MotoristasForm from "../components/MotoristasForm/MotoristasForm";
+import AddButton from "../components/AddButton/AddButton.tsx";
 
 export default function MotoristasView() {
-    const [motoristas, setMotoristas] = useState<Motorista[]>([]);
+    const [motoristas, setMotoristas] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    // Estados do form
-    const [nome, setNome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [saving, setSaving] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [formError, setFormError] = useState<string | null>(null);
-    const [formSuccess, setFormSuccess] = useState<string | null>(null);
-
-    // Paginação
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [modalOpen, setModalOpen] = useState(false);
 
     async function loadMotoristas() {
-        try {
-            setLoading(true);
-            const data = await MotoristaAPI.listAll();
-            setMotoristas(data);
-        } catch (err) {
-            setError("Erro ao carregar motoristas");
-        } finally {
-            setLoading(false);
-        }
+        const data = await MotoristaAPI.listAll();
+        setMotoristas(data);
+        setLoading(false);
     }
 
     useEffect(() => {
         loadMotoristas();
     }, []);
 
-    async function handleCreate({ nome, cpf }: { nome: string; cpf: string }) {
-        try {
-            await MotoristaAPI.create({ nome, cpf });
-            await loadMotoristas();
-        } catch (err) {
-            console.error(err);
-        }
+    async function handleCreate({ nome, cpf }) {
+        await MotoristaAPI.create({ nome, cpf });
+        await loadMotoristas();
     }
-    if (loading) return <p>Carregando motoristas...</p>;
-    if (error) return <p className="text-danger">{error}</p>;
 
-    const startIndex = (page - 1) * pageSize;
-    const currentPageData = motoristas.slice(startIndex, startIndex + pageSize);
-    const totalPages = Math.ceil(motoristas.length / pageSize);
-    const headers:Header[] = [
-        { key: "id", label: "ID" },
-        { key: "nome", label: "Nome" },
-        { key: "cpf", label: "CPF", render: (v) => formatCPF(v) },
-        {
-            key: "data_atualizacao",
-            label: "Atualizado em",
-            render: (v) => new Date(v).toLocaleString(),
-        },
-    ]
+    if (loading) return <p>Carregando...</p>;
 
     return (
-        <div className="table-container">
-            {successMessage && (
-                <div className="alert alert-success">{successMessage}</div>
-            )}
+        <div className="table-container d-flex flex-column align-items-center">
 
-
-
-            <MotoristaForm
-                onSubmit={handleCreate}
+            <AddButton
+                label="Cadastrar Motorista"
+                onOpen={() => setModalOpen(true)}
             />
+            {/* MODAL */}
+            <Modal
+                title="Cadastrar Motorista"
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+            >
+                <div className="modal-content m-3">
+                    <MotoristasForm
+                        onSubmit={handleCreate}
+                        onSuccessClose={() => setModalOpen(false)}
+                    />
+                </div>
+            </Modal>
 
-            <PaginatedTable headers={headers} data={motoristas}/>
+            {/* TABELA PAGINADA */}
+            <PaginatedTable
+                headers={[
+                    { key: "id", label: "ID" },
+                    { key: "nome", label: "Nome" },
+                    { key: "cpf", label: "CPF", render: v => formatCPF(v) },
+                    {
+                        key: "data_atualizacao",
+                        label: "Atualizado",
+                        render: v => new Date(v).toLocaleString()
+                    }
+                ]}
+                data={motoristas}
+                inputLimit={11}
+                onSearch={async (term) => MotoristaAPI.findByCpf(term)}
+                searchPlaceholder="Buscar por CPF..."
+            />
         </div>
     );
 }

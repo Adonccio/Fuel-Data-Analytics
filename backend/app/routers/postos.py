@@ -35,6 +35,29 @@ def listar_postos(
         for row in rows
     ]
 
+
+@router.get("/{cnpj}", response_model=PostoResponse)
+def obter_posto_por_cnpj(
+    cnpj: str,
+    db: Session = Depends(get_db),
+):
+    posto = db.query(models.Posto).filter(models.Posto.cnpj == cnpj).first()
+
+    if not posto:
+        return {"message": "Posto não encontrado", "found": False}
+
+    return (
+        PostoResponse(
+            id=posto.posto_id,
+            nome=posto.nome,
+            cnpj=posto.cnpj,
+            estado=posto.estado,
+            cidade=posto.cidade,
+            data_atualizacao=posto.data_atualizacao,
+        )
+    )
+
+
 @router.post("/", response_model=PostoResponse)
 def criar_posto(
     payload: PostoCreate,

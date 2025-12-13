@@ -33,6 +33,27 @@ def listar_motoristas(
         for row in rows
     ]
 
+
+@router.get("/{cpf}", response_model=MotoristaResponse)
+def obter_motorista_por_cpf(
+    cpf: str,
+    db: Session = Depends(get_db),
+):
+    motorista = db.query(models.Motorista).filter(models.Motorista.cpf == cpf).first()
+
+    if not motorista:
+        return {"message": "Motorista não encontrado", "found": False}
+
+    return (
+        MotoristaResponse(
+            id=motorista.motorista_id,
+            nome=motorista.nome,
+            cpf=motorista.cpf,
+            data_atualizacao=motorista.data_atualizacao,
+        )
+    )
+
+
 @router.post("/", response_model=MotoristaResponse)
 def criar_motorista(
     payload: MotoristaCreate,

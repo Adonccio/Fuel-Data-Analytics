@@ -22,7 +22,7 @@ export const DashboardAPI = {
 };
 
 
-export const DriverAPI = {
+export const MotoristaAPI = {
     listAll: async () => {
         const res = await api.get("/motoristas");
         return res.data;
@@ -30,6 +30,20 @@ export const DriverAPI = {
 
     create: async (motorista: { nome: string; cpf: string }) => {
         const res = await api.post("/motoristas", motorista);
+        return res.data;
+    }
+};
+
+
+
+export const PostoAPI = {
+    listAll: async () => {
+        const res = await api.get("/postos");
+        return res.data;
+    },
+
+    create: async (posto: { nome: string; cnpj: string, estado:string, cidade: string }) => {
+        const res = await api.post("/postos", posto);
         return res.data;
     }
 };

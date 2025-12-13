@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DriverAPI } from "../api";
+import { MotoristaAPI } from "../api";
 import {formatCPF} from "../utils/format.ts";
 import PaginatedTable, {type Header} from "../components/PaginatedTable/PaginatedTable.tsx";
 import MotoristaForm from "../components/MotoristasForm/MotoristasForm";
@@ -31,7 +31,7 @@ export default function MotoristasView() {
     async function loadMotoristas() {
         try {
             setLoading(true);
-            const data = await DriverAPI.listAll();
+            const data = await MotoristaAPI.listAll();
             setMotoristas(data);
         } catch (err) {
             setError("Erro ao carregar motoristas");
@@ -46,7 +46,7 @@ export default function MotoristasView() {
 
     async function handleCreate({ nome, cpf }: { nome: string; cpf: string }) {
         try {
-            await DriverAPI.create({ nome, cpf });
+            await MotoristaAPI.create({ nome, cpf });
             await loadMotoristas();
         } catch (err) {
             console.error(err);

@@ -31,7 +31,6 @@ export default function PaginatedTable({
     return (
         <div className="w-100">
 
-            {/* TABELA */}
             <table className="table-modern w-100">
                 <thead>
                 <tr>
@@ -58,7 +57,6 @@ export default function PaginatedTable({
                 </tbody>
             </table>
 
-            {/* PAGINAÇÃO */}
             <div className="pagination-container">
                 <button
                     className="btn btn-dark"
@@ -80,7 +78,6 @@ export default function PaginatedTable({
                     Próxima
                 </button>
 
-                {/* PAGE SIZE */}
                 <div className="d-flex align-items-center mt-3 mb-3">
                     <label className="me-2 fw-bold">Quantidade: </label>
 

@@ -1,2 +1,2 @@
-# Combustivel-360
+# Data-Fuel-Analytics
 Projeto full cycle para registro e visualização de dados de vendas de combustível

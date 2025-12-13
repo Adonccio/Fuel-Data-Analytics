@@ -5,6 +5,14 @@
   text-align: center;
 }
 
+.app-layout {
+  min-height: 100vh;
+}
+
+.content {
+  background: #f8f9fa; /* opcional */
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

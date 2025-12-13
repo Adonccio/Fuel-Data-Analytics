@@ -23,13 +23,13 @@ export const DashboardAPI = {
 
 
 export const DriverAPI = {
-    search: async (cpf?: string, nome?: string) => {
-        const params: any = {};
+    listAll: async () => {
+        const res = await api.get("/motoristas");
+        return res.data;
+    },
 
-        if (cpf) params.cpf = cpf;
-        if (nome) params.nome = nome;
-
-        const res = await api.get("/drivers/search", { params });
+    create: async (motorista: { nome: string; cpf: string }) => {
+        const res = await api.post("/motoristas", motorista);
         return res.data;
     }
 };

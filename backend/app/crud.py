@@ -99,7 +99,7 @@ def consumo_por_tipo_veiculo(db: Session):
     return rows
 
 
-def historico_motorista(db: Session, cpf: str = None, nome: str = None):
+def historico_venda(db: Session, cpf: str = None, nome: str = None):
     query = (
         db.query(models.Venda, models.Posto, models.Motorista, models.Veiculo)
         .join(models.Posto, models.Venda.posto_id == models.Posto.posto_id)
@@ -113,3 +113,7 @@ def historico_motorista(db: Session, cpf: str = None, nome: str = None):
         query = query.filter(models.Motorista.nome.ilike(f"%{nome}%"))
 
     return query.order_by(models.Venda.data_coleta.desc()).all()
+
+
+def listar_motoristas(db: Session):
+    return db.query(models.Motorista).order_by(models.Motorista.nome).all()

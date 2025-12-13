@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import Base, engine
-from .routers import ingestion, dashboard, drivers
+from .routers import ingestion, dashboard, vendas, motoristas
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -26,7 +26,8 @@ app.add_middleware(
 
 app.include_router(ingestion.router)
 app.include_router(dashboard.router)
-app.include_router(drivers.router)
+app.include_router(vendas.router)
+app.include_router(motoristas.router)
 
 
 @app.get("/")

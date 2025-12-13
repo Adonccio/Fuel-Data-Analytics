@@ -21,6 +21,16 @@ class IngestionPayload(BaseModel):
     tipo_veiculo: str
 
 
+class MotoristaResponse(BaseModel):
+    id: int
+    nome: str
+    cpf: str
+    data_atualizacao: datetime
+
+    model_config = {
+        "from_attributes": True
+    }
+
 class VendaResponse(BaseModel):
     id: int
     data_coleta: datetime
@@ -59,3 +69,8 @@ class RegistroHistorico(BaseModel):
 class FiltroMotorista(BaseModel):
     cpf: Optional[str] = None
     nome: Optional[str] = None
+
+
+class MotoristaCreate(BaseModel):
+    nome: str
+    cpf: str

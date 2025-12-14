@@ -114,6 +114,15 @@ class PostoCreate(BaseModel):
     cidade: str
     estado: str
 
+class VendaCreate(BaseModel):
+    posto_id: int
+    motorista_id: int
+    veiculo_id: int
+    data_coleta: datetime
+    tipo_combustivel: str
+    preco: float
+    volume_vendido: float
+
 
 class VeiculoCreate(BaseModel):
     placa: str

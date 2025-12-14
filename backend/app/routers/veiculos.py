@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from ..database import get_db
-from .. import models
+from .. import models, crud
 from ..schemas import VeiculoResponse, VeiculoCreate
 
 router = APIRouter(prefix="/veiculos", tags=["Veiculos"])
@@ -54,6 +54,7 @@ def criar_veiculo(
     ).first()
 
     if existente:
+        crud.registrar_historico(db, "Veículo", "Erro")
         raise HTTPException(
             status_code=400,
             detail="Já existe um veículo cadastrado com esta placa."
@@ -67,6 +68,8 @@ def criar_veiculo(
     db.add(novo)
     db.commit()
     db.refresh(novo)
+
+    crud.registrar_historico(db, "Veículo", "Sucesso")
 
     return VeiculoResponse(
         id=novo.veiculo_id,

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from ..database import get_db
-from .. import models
+from .. import models, crud
 from ..schemas import PostoResponse, PostoCreate
 
 router = APIRouter(prefix="/postos", tags=["Postos"])
@@ -40,16 +40,13 @@ def criar_posto(
     payload: PostoCreate,
     db: Session = Depends(get_db),
 ):
+    # verifica se o cnpj ja existe e registra no controle, nao tenta adicionar no banco
     existente = db.query(models.Posto).filter(models.Posto.cnpj == payload.cnpj).first()
     if existente:
+        crud.registrar_historico(db, "Posto", "Erro")
         raise HTTPException(
             status_code=400,
             detail="Já existe um posto cadastrado com este CNPJ."
-        )
-    if not (payload.cnpj.isdigit() and len(payload.cnpj) == 14):
-        raise HTTPException(
-            status_code=400,
-            detail="CNPJ inválido. Deve conter exatamente 14 dígitos numéricos."
         )
 
 
@@ -59,10 +56,12 @@ def criar_posto(
         estado=payload.estado,
         cidade=payload.cidade,
     )
-
     db.add(novo)
     db.commit()
     db.refresh(novo)
+
+
+    crud.registrar_historico(db, "Posto", "Sucesso")
 
     return PostoResponse(
         id=novo.posto_id,

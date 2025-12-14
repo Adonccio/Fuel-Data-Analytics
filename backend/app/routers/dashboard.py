@@ -1,16 +1,34 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+from .. import crud
 
 from ..database import get_db
-from .. import crud, models
-from ..schemas import PrecoMedioCombustivel, ConsumoPorTipoVeiculo, VendaResponse, RegistroHistorico
+from .. import models
+from ..schemas import (
+    PrecoMedioCombustivel,
+    ConsumoPorTipoVeiculo,
+    RegistroHistorico
+)
 
-router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 
+# =============================
+# MÉDIAS DE PREÇO POR COMBUSTÍVEL
+# =============================
 @router.get("/precos-medios", response_model=list[PrecoMedioCombustivel])
 def get_precos_medios(db: Session = Depends(get_db)):
-    rows = crud.media_preco_por_combustivel(db)
+    rows = (
+        db.query(
+            models.Venda.tipo_combustivel,
+            func.avg(models.Venda.preco).label("preco_medio")
+        )
+        .group_by(models.Venda.tipo_combustivel)
+        .order_by(func.avg(models.Venda.preco).desc())
+        .all()
+    )
+
     return [
         PrecoMedioCombustivel(
             tipo_combustivel=r[0],
@@ -20,67 +38,49 @@ def get_precos_medios(db: Session = Depends(get_db)):
     ]
 
 
+# =============================
+# CONSUMO POR TIPO DE VEÍCULO
+# =============================
 @router.get("/consumo-veiculo", response_model=list[ConsumoPorTipoVeiculo])
 def get_consumo_veiculo(db: Session = Depends(get_db)):
-    rows = crud.consumo_por_tipo_veiculo(db)
-    return [
-        ConsumoPorTipoVeiculo(
-            tipo_veiculo=r[0],
-            total_volume=float(r[1])
+    rows = (
+        db.query(
+            models.Veiculo.tipo,
+            func.sum(models.Venda.volume_vendido).label("total_volume")
         )
-        for r in rows
-    ]
-
-
-
-@router.get("/historico-registros", response_model=list[RegistroHistorico])
-def get_vehicle_consumption(db: Session = Depends(get_db)):
-    rows = crud.consumo_por_tipo_veiculo(db)
-    return [
-        ConsumoPorTipoVeiculo(
-            tipo_veiculo=r[0],
-            total_volume=float(r[1])
-        )
-        for r in rows
-    ]
-
-
-
-@router.get("/vendas", response_model=list[VendaResponse])
-def list_vendas(
-    page: int = Query(1, ge=1),
-    size: int = Query(20, ge=1, le=100),
-    db: Session = Depends(get_db),
-):
-    offset = (page - 1) * size
-
-    query = (
-        db.query(models.Venda, models.Posto, models.Motorista, models.Veiculo)
-        .join(models.Posto, models.Venda.posto_id == models.Posto.posto_id)
-        .join(models.Motorista, models.Venda.motorista_id == models.Motorista.motorista_id)
-        .join(models.Veiculo, models.Venda.veiculo_id == models.Veiculo.veiculo_id)
-        .order_by(models.Venda.data_coleta.desc())
-        .offset(offset)
-        .limit(size)
+        .join(models.Venda, models.Veiculo.veiculo_id == models.Venda.veiculo_id)
+        .group_by(models.Veiculo.tipo)
+        .order_by(func.sum(models.Venda.volume_vendido).desc())
+        .all()
     )
 
-    rows = query.all()
-
-    result = []
-    for venda, posto, motorista, veiculo in rows:
-        result.append(
-            VendaResponse(
-                id=venda.venda_id,
-                data_coleta=venda.data_coleta,
-                tipo_combustivel=venda.tipo_combustivel,
-                preco=float(venda.preco),
-                volume_vendido=float(venda.volume_vendido),
-                posto_nome=posto.nome,
-                cidade=posto.cidade,
-                estado=posto.estado,
-                placa_veiculo=veiculo.placa,
-                tipo_veiculo=veiculo.tipo,
-                motorista_nome=motorista.nome,
-            )
+    return [
+        ConsumoPorTipoVeiculo(
+            tipo_veiculo=r[0],
+            total_volume=float(r[1])
         )
-    return result
+        for r in rows
+    ]
+
+
+# =============================
+# HISTÓRICO DE REGISTROS (AINDA NÃO IMPLEMENTADO)
+# =============================
+@router.get("/historico-registros", response_model=list[RegistroHistorico])
+def historico_registros(db: Session = Depends(get_db)):
+    rows = (
+        db.query(models.RegistroHistorico)
+        .order_by(models.RegistroHistorico.data_atualizacao.desc())
+        .all()
+    )
+
+    return [
+        RegistroHistorico(
+            historico_id=row.historico_id,
+            tp_registro=row.tp_registro,
+            status_registro=row.status_registro,
+            data_atualizacao=row.data_atualizacao,
+        )
+        for row in rows
+    ]
+

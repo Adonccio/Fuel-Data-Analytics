@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DashboardAPI } from "../api";
 import type { PrecoMedioCombustivel, ConsumoPorTipoVeiculo } from "../types/dashboard";
-import BarChartPreco from "../components/BarChartPreco/BarChartPreco.tsx";
-import BarChartVeiculos from "../components/BarChartVeiculoConsumo/BarChartVeiculoConsumo.tsx";
+import BarChartPreco from "../components/BarChartPreco/BarChartPreco";
+import BarChartVeiculos from "../components/BarChartVeiculoConsumo/BarChartVeiculoConsumo";
 import logomarca from "../assets/logomarca.png";
 
 export default function DashboardPage() {
@@ -22,7 +22,7 @@ export default function DashboardPage() {
                 <img
                     src={logomarca}
                     height={250}
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "contain", margin: "-70px auto 5px" }}
                     alt="Logomarca"
                 />
             </div>

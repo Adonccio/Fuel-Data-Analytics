@@ -4,7 +4,7 @@ import { formatCPF } from "../utils/format";
 import PaginatedTable from "../components/PaginatedTable/PaginatedTable";
 import Modal from "../components/Modal/Modal";
 import MotoristasForm from "../components/MotoristasForm/MotoristasForm";
-import AddButton from "../components/AddButton/AddButton.tsx";
+import AddButton from "../components/AddButton/AddButton";
 
 export default function MotoristasView() {
     const [motoristas, setMotoristas] = useState([]);

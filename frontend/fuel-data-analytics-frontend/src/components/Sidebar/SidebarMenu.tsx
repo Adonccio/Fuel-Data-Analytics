@@ -3,12 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./SidebarMenu.css";
 import { Link } from "react-router-dom";
-import {CarIcon} from "../../assets/icons/CarIcon.tsx";
-import {AnalyticsIcon} from "../../assets/icons/AnalyticsIcon.tsx";
-import {FuelPumpIcon} from "../../assets/icons/FuelPumpIcon.tsx";
-import {PersonIcon} from "../../assets/icons/PersonIcon.tsx";
-import {DatabaseIcon} from "../../assets/icons/DatabaseIcon.tsx";
-import {CoinIcon} from "../../assets/icons/CoinIcon.tsx";
+import {CarIcon} from "../../assets/icons/CarIcon";
+import {AnalyticsIcon} from "../../assets/icons/AnalyticsIcon";
+import {FuelPumpIcon} from "../../assets/icons/FuelPumpIcon";
+import {PersonIcon} from "../../assets/icons/PersonIcon";
+import {DatabaseIcon} from "../../assets/icons/DatabaseIcon";
+import {CoinIcon} from "../../assets/icons/CoinIcon";
 
 export const Sidebar: React.FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(true);

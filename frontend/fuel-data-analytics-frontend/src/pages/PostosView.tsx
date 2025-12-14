@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import {MotoristaAPI, PostoAPI} from "../api";
-import {formatCNPJ} from "../utils/format.ts";
-import PaginatedTable, {type Header} from "../components/PaginatedTable/PaginatedTable.tsx";
+import {formatCNPJ} from "../utils/format";
+import PaginatedTable, {type Header} from "../components/PaginatedTable/PaginatedTable";
 import PostosForm from "../components/PostosForm/PostosForm";
-import AddButton from "../components/AddButton/AddButton.tsx";
-import Modal from "../components/Modal/Modal.tsx";
+import AddButton from "../components/AddButton/AddButton";
+import Modal from "../components/Modal/Modal";
 
 interface Posto {
     id: number;
@@ -21,17 +21,8 @@ export default function PostosView() {
     const [error, setError] = useState<string | null>(null);
 
     // Estados do form
-    const [nome, setNome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [saving, setSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
-    const [formError, setFormError] = useState<string | null>(null);
-    const [formSuccess, setFormSuccess] = useState<string | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
-
-    // Paginação
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
 
     async function loadPosto() {
         try {
@@ -60,9 +51,7 @@ export default function PostosView() {
     if (loading) return <p>Carregando postos...</p>;
     if (error) return <p className="text-danger">{error}</p>;
 
-    const startIndex = (page - 1) * pageSize;
-    const currentPageData:Posto = postos.slice(startIndex, startIndex + pageSize);
-    const totalPages = Math.ceil(postos.length / pageSize);
+
     const headers:Header[] = [
         { key: "id", label: "ID" },
         { key: "nome", label: "Nome" },

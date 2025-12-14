@@ -34,5 +34,14 @@ services:
     volumes:
       - ./backend:/app
 
+  frontend:
+    build: ./frontend/fuel-data-analytics-frontend
+    container_name: fuel_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
 volumes:
   pgdata:

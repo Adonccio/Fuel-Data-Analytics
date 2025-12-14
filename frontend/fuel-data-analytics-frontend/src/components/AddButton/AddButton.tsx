@@ -1,5 +1,5 @@
 import "./AddButton.css"
-import {PlusIcon} from "../../assets/icons/PlusIcon.tsx";
+import {PlusIcon} from "../../assets/icons/PlusIcon";
 
 interface ModalTriggerButtonProps {
     label: string;

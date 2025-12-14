@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import React, {useState, useMemo, useEffect, JSX} from "react";
 import "./PaginatedTable.css";
 
 export interface Header {
@@ -173,7 +173,7 @@ export default function PaginatedTable({
                                             const isSuccess = value?.toLowerCase() === "sucesso";
                                             const isError = value?.toLowerCase() === "erro";
 
-                                            const style = {
+                                            const style: React.CSSProperties = {
                                                 padding: "4px 10px",
                                                 borderRadius: "6px",
                                                 fontWeight: "bold",

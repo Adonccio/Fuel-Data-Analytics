@@ -1,11 +1,11 @@
-import DashboardPage from "./pages/Dashboard.tsx";
-import { Sidebar } from "./components/Sidebar/SidebarMenu.tsx";
+import DashboardPage from "./pages/Dashboard";
+import { Sidebar } from "./components/Sidebar/SidebarMenu";
 import { Routes, Route } from "react-router-dom";
-import MotoristasView from "./pages/MotoristasView.tsx";
-import PostosView from "./pages/PostosView.tsx";
-import VeiculosView from "./pages/VeiculosView.tsx";
-import ControleRegistrosView from "./pages/ControleRegistrosView.tsx";
-import VendasView from "./pages/VendasView.tsx";
+import MotoristasView from "./pages/MotoristasView";
+import PostosView from "./pages/PostosView";
+import VeiculosView from "./pages/VeiculosView";
+import ControleRegistrosView from "./pages/ControleRegistrosView";
+import VendasView from "./pages/VendasView";
 
 export default function App() {
     return (

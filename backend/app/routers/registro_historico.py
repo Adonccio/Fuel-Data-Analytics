@@ -6,10 +6,6 @@ from ..schemas import RegistroHistoricoCreate, RegistroHistorico
 
 router = APIRouter(prefix="/registro-historico", tags=["Registro Histórico"])
 
-
-# ========================================
-# LISTAR HISTÓRICO
-# ========================================
 @router.get("/", response_model=list[RegistroHistorico])
 def listar_historico(
     tipo: str | None = Query(None),

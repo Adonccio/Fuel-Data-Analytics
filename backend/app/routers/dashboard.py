@@ -46,7 +46,7 @@ def get_consumo_veiculo(db: Session = Depends(get_db)):
     rows = (
         db.query(
             models.Veiculo.tipo,
-            func.sum(models.Venda.volume_vendido).label("total_volume")
+            func.avg(models.Venda.volume_vendido).label("total_volume")
         )
         .join(models.Venda, models.Veiculo.veiculo_id == models.Venda.veiculo_id)
         .group_by(models.Veiculo.tipo)

@@ -5,6 +5,7 @@ import MotoristasView from "./pages/MotoristasView.tsx";
 import PostosView from "./pages/PostosView.tsx";
 import VeiculosView from "./pages/VeiculosView.tsx";
 import ControleRegistrosView from "./pages/ControleRegistrosView.tsx";
+import VendasView from "./pages/VendasView.tsx";
 
 export default function App() {
     return (
@@ -18,6 +19,7 @@ export default function App() {
                     <Route path="/postos" element={<PostosView />} />
                     <Route path="/veiculos" element={<VeiculosView />} />
                     <Route path="/controle-registros" element={<ControleRegistrosView />} />
+                    <Route path="/vendas" element={<VendasView />} />
                 </Routes>
             </div>
         </div>

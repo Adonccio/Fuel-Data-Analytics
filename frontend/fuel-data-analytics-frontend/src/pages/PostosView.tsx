@@ -54,7 +54,7 @@ export default function PostosView() {
             await PostoAPI.create({ nome, cnpj, cidade, estado });
             await loadPosto();
         } catch (err) {
-            console.error(err);
+            throw(err);
         }
     }
     if (loading) return <p>Carregando postos...</p>;
@@ -87,7 +87,7 @@ export default function PostosView() {
                 onOpen={() => setModalOpen(true)}
             />
             <Modal
-                title="Cadastrar Posto"
+                title="Novo Posto"
                 isOpen={modalOpen}
                 width={"600px"}
                 onClose={() => setModalOpen(false)}

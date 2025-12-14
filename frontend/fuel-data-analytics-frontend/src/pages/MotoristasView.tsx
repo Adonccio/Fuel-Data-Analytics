@@ -36,9 +36,9 @@ export default function MotoristasView() {
                 onOpen={() => setModalOpen(true)}
             />
             <Modal
-                title="Cadastrar Motorista"
+                title="Novo Motorista"
                 isOpen={modalOpen}
-                width={"400px"}
+                width={"430px"}
                 onClose={() => setModalOpen(false)}
             >
                 <div className="modal-content m-3">

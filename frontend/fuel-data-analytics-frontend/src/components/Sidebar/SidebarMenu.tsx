@@ -8,9 +8,10 @@ import {AnalyticsIcon} from "../../assets/icons/AnalyticsIcon.tsx";
 import {FuelPumpIcon} from "../../assets/icons/FuelPumpIcon.tsx";
 import {PersonIcon} from "../../assets/icons/PersonIcon.tsx";
 import {DatabaseIcon} from "../../assets/icons/DatabaseIcon.tsx";
+import {CoinIcon} from "../../assets/icons/CoinIcon.tsx";
 
 export const Sidebar: React.FC = () => {
-    const [collapsed, setCollapsed] = useState<boolean>(false);
+    const [collapsed, setCollapsed] = useState<boolean>(true);
     const handleMenuClick = () => {
         setCollapsed(true)
     };
@@ -29,45 +30,77 @@ export const Sidebar: React.FC = () => {
             <ul className="nav flex-column">
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/"}
-                          onClick={handleMenuClick}>
+                    <Link
+                        className="nav-link d-flex align-items-center"
+                        to={"/"}
+                        onClick={handleMenuClick}
+                        title="Análise"
+                    >
                         <AnalyticsIcon/>
                         <span className="sidebar-text">Análise</span>
                     </Link>
                 </li>
 
-
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/motoristas"}
-                          onClick={handleMenuClick}>
+                    <Link
+                        className="nav-link d-flex align-items-center"
+                        to={"/motoristas"}
+                        onClick={handleMenuClick}
+                        title="Motoristas"
+                    >
                         <PersonIcon/>
                         <span className="sidebar-text">Motoristas</span>
                     </Link>
                 </li>
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/postos"}
-                          onClick={handleMenuClick}>
+                    <Link
+                        className="nav-link d-flex align-items-center"
+                        to={"/postos"}
+                        onClick={handleMenuClick}
+                        title="Postos"
+                    >
                         <FuelPumpIcon/>
                         <span className="sidebar-text">Postos</span>
                     </Link>
                 </li>
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center" to={"/veiculos"}
-                          onClick={handleMenuClick}>
+                    <Link
+                        className="nav-link d-flex align-items-center"
+                        to={"/veiculos"}
+                        onClick={handleMenuClick}
+                        title="Veículos"
+                    >
                         <CarIcon/>
                         <span className="sidebar-text">Veículos</span>
                     </Link>
                 </li>
 
                 <li className="nav-item">
-                    <Link className="nav-link d-flex align-items-center"  to={"/controle-registros"}
-                          onClick={handleMenuClick}>
+                    <Link
+                        className="nav-link d-flex align-items-center"
+                        to={"/vendas"}
+                        onClick={handleMenuClick}
+                        title="Registro e Listagem de Vendas"
+                    >
+                        <CoinIcon/>
+                        <span className="sidebar-text">Vendas</span>
+                    </Link>
+                </li>
+
+                <li className="nav-item">
+                    <Link
+                        className="nav-link d-flex align-items-center"
+                        to={"/controle-registros"}
+                        onClick={handleMenuClick}
+                        title="Controle de Registros"
+                    >
                         <DatabaseIcon/>
                         <span className="sidebar-text">Controle de Registros</span>
                     </Link>
                 </li>
+
 
             </ul>
         </div>

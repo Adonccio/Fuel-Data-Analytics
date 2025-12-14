@@ -44,7 +44,7 @@ export default function VeiculosView() {
             />
 
             <Modal
-                title="Cadastrar Veículo"
+                title="Novo Veículo"
                 isOpen={modalOpen}
                 width={"400px"}
                 onClose={() => setModalOpen(false)}

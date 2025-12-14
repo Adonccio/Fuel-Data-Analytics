@@ -36,7 +36,8 @@ export default function MotoristasForm({ onSubmit, onSuccessClose }: MotoristaFo
             }, 1200);
 
         } catch (err) {
-            setError("Erro ao cadastrar motorista.");
+            setError(
+                err?.response?.data?.detail || "Erro ao cadastrar posto.")
         } finally {
             setSaving(false);
         }

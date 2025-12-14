@@ -178,6 +178,8 @@ export default function PaginatedTable({
                                                 borderRadius: "6px",
                                                 fontWeight: "bold",
                                                 display: "inline-block",
+                                                width: "30%",
+                                                textAlign: "center",
                                                 backgroundColor: isSuccess ? "#c8f7c5" : isError ? "#f7c5c5" : "#eee",
                                                 color: isSuccess ? "#145a32" : isError ? "#7b241c" : "#333",
                                                 border: `1px solid ${

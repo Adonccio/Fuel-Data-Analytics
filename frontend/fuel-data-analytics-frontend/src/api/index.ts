@@ -59,7 +59,6 @@ export const PostoAPI = {
 };
 
 
-
 export const Veiculos = {
     listAll: async () => {
         const res = await api.get("/veiculos");
@@ -74,6 +73,20 @@ export const Veiculos = {
     findByPlaca: async (placa: string) => {
         const res = await api.get("/veiculos/", {params: {placa}});
         return res.data
+    },
+
+};
+
+
+export const Vendas = {
+    listAll: async () => {
+        const res = await api.get("/vendas");
+        return res.data;
+    },
+
+    create: async (vendaData) => {
+        const res = await api.post("/vendas", vendaData);
+        return res.data;
     },
 };
 

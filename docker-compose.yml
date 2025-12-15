@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: fuel_db
+    restart: always
+    environment:
+      POSTGRES_DB: combustivel360
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      TZ: America/Sao_Paulo
+    command: ["postgres", "-c", "timezone=America/Sao_Paulo"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d combustivel360"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  backend:
+    build: ./backend
+    container_name: fuel_backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://admin:admin@fuel_db:5432/combustivel360
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build: ./frontend/fuel-data-analytics-frontend
+    container_name: fuel_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  pgdata:

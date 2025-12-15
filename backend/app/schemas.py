@@ -127,3 +127,15 @@ class VendaCreate(BaseModel):
 class VeiculoCreate(BaseModel):
     placa: str
     tipo: str
+
+    
+
+class ConsumoPorMes(BaseModel):
+    mes: int
+    total_volume: float
+
+    
+
+class ConsumoPorCidadeTop3(BaseModel):
+    cidade: str
+    total_volume: float

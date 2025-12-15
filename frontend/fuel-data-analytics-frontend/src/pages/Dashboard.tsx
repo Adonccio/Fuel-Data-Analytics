@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import { DashboardAPI } from "../api";
-import type { PrecoMedioCombustivel, ConsumoPorTipoVeiculo } from "../types/dashboard";
+import type {PrecoMedioCombustivel, ConsumoPorTipoVeiculo, ConsumoPorMes} from "../types/dashboard";
 import BarChartPreco from "../components/BarChartPreco/BarChartPreco";
 import BarChartVeiculos from "../components/BarChartVeiculoConsumo/BarChartVeiculoConsumo";
 import logomarca from "../assets/logomarca.png";
+import BarConsumoMes from "../components/BarChartConsumoPorMes/BarConsumoMes";
+import BarConsumoCidade from "../components/BarChartConsumoPorCidade/BarConsumoCidade";
 
 export default function DashboardPage() {
     const [prices, setPrices] = useState<PrecoMedioCombustivel[]>([]);
     const [vehicles, setVehicles] = useState<ConsumoPorTipoVeiculo[]>([]);
+    const [mes, setMes] = useState<ConsumoPorMes[]>([]);
+    const [cidade, setCidade] = useState<ConsumoPorMes[]>([]);
 
     useEffect(() => {
         DashboardAPI.getAveragePrices().then(setPrices);
         DashboardAPI.getVehicleConsumption().then(setVehicles);
+        DashboardAPI.getConsumoPorMes().then(setMes);
+        DashboardAPI.getConsumoPorCidade().then(setCidade);
     }, []);
 
     return (
@@ -78,6 +84,37 @@ export default function DashboardPage() {
 
             {/* =========================== */}
             {/* 2ª LINHA - GRÁFICOS         */}
+            {/* =========================== */}
+            <div className="row g-4 mt-4 w-100 justify-content-center">
+
+                {/* Gráfico Preços */}
+                <div className="col-12 col-md-5">
+                    <div className="card shadow-sm h-100">
+                        <div className="card-header bg-primary text-white text-center">
+                            <h5 className="mb-0">Consumo por Mês</h5>
+                        </div>
+                        <div className="card-body">
+                            <BarConsumoMes data={mes} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Gráfico Consumo */}
+                <div className="col-12 col-md-5">
+                    <div className="card shadow-sm h-100">
+                        <div className="card-header bg-primary text-white text-center">
+                            <h5 className="mb-0">Top 3 Cidades com Mais Consumo</h5>
+                        </div>
+                        <div className="card-body">
+                            <BarConsumoCidade data={cidade} />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {/* =========================== */}
+            {/* 3ª LINHA - GRÁFICOS         */}
             {/* =========================== */}
             <div className="row g-4 mt-4 w-100 justify-content-center">
 

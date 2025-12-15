@@ -8,15 +8,14 @@ from .. import models
 from ..schemas import (
     PrecoMedioCombustivel,
     ConsumoPorTipoVeiculo,
-    RegistroHistorico
+    RegistroHistorico,
+    ConsumoPorMes,
+    ConsumoPorCidadeTop3
 )
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 
-# =============================
-# MÉDIAS DE PREÇO POR COMBUSTÍVEL
-# =============================
 @router.get("/precos-medios", response_model=list[PrecoMedioCombustivel])
 def get_precos_medios(db: Session = Depends(get_db)):
     rows = (
@@ -38,9 +37,6 @@ def get_precos_medios(db: Session = Depends(get_db)):
     ]
 
 
-# =============================
-# CONSUMO POR TIPO DE VEÍCULO
-# =============================
 @router.get("/consumo-veiculo", response_model=list[ConsumoPorTipoVeiculo])
 def get_consumo_veiculo(db: Session = Depends(get_db)):
     rows = (
@@ -63,9 +59,6 @@ def get_consumo_veiculo(db: Session = Depends(get_db)):
     ]
 
 
-# =============================
-# HISTÓRICO DE REGISTROS (AINDA NÃO IMPLEMENTADO)
-# =============================
 @router.get("/historico-registros", response_model=list[RegistroHistorico])
 def historico_registros(db: Session = Depends(get_db)):
     rows = (
@@ -84,3 +77,50 @@ def historico_registros(db: Session = Depends(get_db)):
         for row in rows
     ]
 
+
+
+@router.get("/consumo-mes", response_model=list[ConsumoPorMes])
+def get_consumo_mes(db: Session = Depends(get_db)):
+    mes = func.extract("month", models.Venda.data_coleta).label("mes")
+    total_volume = func.sum(models.Venda.volume_vendido).label("total_volume")
+
+    rows = (
+        db.query(mes, total_volume)
+        .group_by(mes)
+        .order_by(total_volume.desc())
+        .all()
+    )
+
+    
+
+    return [
+        ConsumoPorMes(
+            mes=r[0],
+            total_volume=float(r[1])
+        )
+        for r in rows
+    ]
+
+
+
+
+@router.get("/consumo-cidade", response_model=list[ConsumoPorCidadeTop3])
+def get_consumo_cidade(db: Session = Depends(get_db)):
+    rows = (
+        db.query(
+            models.Posto.cidade,
+            func.sum(models.Venda.volume_vendido).label("total_volume")
+        )
+        .join(models.Posto, models.Posto.posto_id == models.Venda.posto_id)
+        .group_by(models.Posto.cidade)
+        .order_by(func.sum(models.Venda.volume_vendido).desc())
+        .limit(3)   
+    )
+
+    return [
+        ConsumoPorCidadeTop3(
+            cidade=r[0],
+            total_volume=float(r[1])
+        )
+        for r in rows
+    ]

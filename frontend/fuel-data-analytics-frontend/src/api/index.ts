@@ -15,8 +15,13 @@ export const DashboardAPI = {
         return res.data;
     },
 
-    getSales: async (page = 1, size = 20) => {
-        const res = await api.get(`/dashboard/vendas?page=${page}&size=${size}`);
+    getConsumoPorMes: async (page = 1, size = 20) => {
+        const res = await api.get(`/dashboard/consumo-mes?page=${page}&size=${size}`);
+        return res.data;
+    },
+
+    getConsumoPorCidade: async (page = 1, size = 20) => {
+        const res = await api.get(`/dashboard/consumo-cidade?page=${page}&size=${size}`);
         return res.data;
     }
 };

@@ -14,7 +14,7 @@ export default function ControleRegistrosView() {
     const [registros, setRegistros] = useState<Registro[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const tipos = ["Motorista", "Posto", "Veiculo", "Venda"];
+    const tipos = ["Motorista", "Posto", "Veículo", "Venda"];
 
 
     // carregar registros

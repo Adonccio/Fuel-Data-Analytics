@@ -10,6 +10,16 @@ export interface ConsumoPorTipoVeiculo {
     total_volume: number;
 }
 
+export interface ConsumoPorMes {
+    mes: number;
+    total_volume: number;
+}
+
+export interface ConsumoPorCidade {
+    cidade: string;
+    total_volume: number;
+}
+
 export interface VendaResponse {
     id: number;
     data_coleta: string;

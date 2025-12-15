@@ -20,7 +20,12 @@ Na raiz do projeto, execute:
 ```bash
 docker compose up --build
 ```
+Após o backend estar rodando, se quiser popular o banco:
 
+```bash
+python backend/scripts/seed.py
+
+```
 
 #  🔐Credenciais do Banco de Dados
 

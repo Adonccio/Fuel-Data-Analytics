@@ -7,6 +7,11 @@ Projeto Full Cycle para registro, ingestão e visualização de dados de vendas 
 - Script de seed para popular o banco
 - Ambiente completo via Docker Compose
 
+# Deploy
+
+A aplicação está rodando em produçao no endereço
+
+https://fueldataanalytics.vercel.app/
 
 # 📦 Requisitos
 
@@ -43,3 +48,4 @@ As credenciais padrão são:
 - Backend – Swagger	http://localhost:8000
 
 - PostgreSQL	localhost:5432
+

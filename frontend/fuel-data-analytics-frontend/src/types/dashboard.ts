@@ -20,6 +20,11 @@ export interface ConsumoPorCidade {
     total_volume: number;
 }
 
+export interface PostoPorEstado {
+    estado: string;
+    quantidada_postos: number;
+}
+
 export interface VendaResponse {
     id: number;
     data_coleta: string;

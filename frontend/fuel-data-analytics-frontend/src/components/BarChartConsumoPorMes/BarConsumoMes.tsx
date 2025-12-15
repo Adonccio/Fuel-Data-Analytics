@@ -9,6 +9,11 @@ import {
     ResponsiveContainer
 } from "recharts";
 
+interface BarConsumoMesProps {
+    data: any[];
+    isMediaPrecoMes?: boolean; // opcional se quiser
+}
+
 const mesesLabels = {
     1: "Jan",
     2: "Fev",
@@ -24,23 +29,36 @@ const mesesLabels = {
     12: "Dez"
 };
 
-export default function BarConsumoMes({ data }) {
+export default function BarConsumoMes({ data, isMediaPrecoMes }: BarConsumoMesProps) {
     if (!data || data.length === 0) return <p>Nenhum dado disponível</p>;
 
     const chartData = data.map(item => ({
         mes: mesesLabels[item.mes] ?? item.mes,     // converte 1 → Jan
-        volume: item.total_volume
+        valor: isMediaPrecoMes ? item.preco_medio : item.total_volume
     }));
 
     return (
         <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
+            <BarChart
+                data={chartData}
+                margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+            >
                 <CartesianGrid />
-                <XAxis dataKey="mes" />
-                <YAxis />
+
+                <XAxis
+                    dataKey="mes"
+                    padding={{ left: 20, right: 20 }}
+                />
+
+                <YAxis domain={[
+                    0,
+                    (dataMax: number) => Math.ceil(dataMax * 1.1)
+                ]} />
+
                 <Tooltip />
-                <Bar dataKey="volume" fill="#1a3361" />
+                <Bar dataKey="valor" fill="#1a3361" />
             </BarChart>
         </ResponsiveContainer>
+
     );
 }

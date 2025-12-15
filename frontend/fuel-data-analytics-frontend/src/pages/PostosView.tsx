@@ -43,7 +43,6 @@ export default function PostosView() {
     async function handleCreate({ nome,  cnpj, cidade, estado }: { nome: string; cnpj: string; cidade: string; estado: string }) {
         try {
             await PostoAPI.create({ nome, cnpj, cidade, estado });
-            await loadPosto();
         } catch (err) {
             throw(err);
         }
@@ -81,12 +80,12 @@ export default function PostosView() {
                 width={"600px"}
                 onClose={() => setModalOpen(false)}
             >
-                <div className="modal-content m-3">
-                    <PostosForm
-                        onSubmit={handleCreate}
-                        onSuccessClose={() => setModalOpen(false)}
-                    />
-                </div>
+                <PostosForm
+                    onSubmit={handleCreate}
+                    onSuccessClose={() => {
+                        setModalOpen(false);
+                    }}
+                />
             </Modal>
             <PaginatedTable inputLimit={14} searchPlaceholder={"Buscar por CNPJ"}  onSearch={async (term) => PostoAPI.findByCnpj(term)} headers={headers} data={postos}/>
         </div>

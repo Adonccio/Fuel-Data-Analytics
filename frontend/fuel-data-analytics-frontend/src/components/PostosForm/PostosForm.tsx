@@ -3,8 +3,6 @@ import { useState } from "react";
 interface PostoFormProps {
     onSubmit: (data: { nome: string; cnpj: string; estado: string; cidade: string }) => Promise<void>;
     loading?: boolean;
-    error?: string | null;
-    success?: string | null;
     onSuccessClose: () => void;
 }
 
@@ -41,6 +39,7 @@ export default function PostoForm({
 
             setSuccess("Posto cadastrado com sucesso!");
 
+
             setTimeout(() => {
                 setSuccess("");
                 setNome("");
@@ -49,6 +48,7 @@ export default function PostoForm({
                 setCidade("");
                 onSuccessClose();
             }, 1200);
+
         } catch (err: any) {
             setError(
                 err?.response?.data?.detail || "Erro ao cadastrar posto."
@@ -59,9 +59,10 @@ export default function PostoForm({
     }
 
     return (
-        <form className="modern-form p-3 d-flex flex-column align-items-center" onSubmit={handleSubmit}>
+        <form className="d-flex flex-column align-items-center w-100" onSubmit={handleSubmit}>
             {success && <div className="alert alert-success">{success}</div>}
             {error && <div className="alert alert-danger">{error}</div>}
+
 
             {/* Nome + CNPJ */}
             <div className="d-flex gap-3 mb-3">

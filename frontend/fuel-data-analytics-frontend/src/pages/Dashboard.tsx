@@ -1,23 +1,28 @@
 import { useEffect, useState } from "react";
 import { DashboardAPI } from "../api";
-import type {PrecoMedioCombustivel, ConsumoPorTipoVeiculo, ConsumoPorMes} from "../types/dashboard";
+import type {PrecoMedioCombustivel, ConsumoPorTipoVeiculo, ConsumoPorMes, PostoPorEstado} from "../types/dashboard";
 import BarChartPreco from "../components/BarChartPreco/BarChartPreco";
 import BarChartVeiculos from "../components/BarChartVeiculoConsumo/BarChartVeiculoConsumo";
 import logomarca from "../assets/logomarca.png";
 import BarConsumoMes from "../components/BarChartConsumoPorMes/BarConsumoMes";
 import BarConsumoCidade from "../components/BarChartConsumoPorCidade/BarConsumoCidade";
+import PizzaPostosEstado from "../components/PizzaPostoPorEstado/PizzaPostoPorEstado";
 
 export default function DashboardPage() {
     const [prices, setPrices] = useState<PrecoMedioCombustivel[]>([]);
     const [vehicles, setVehicles] = useState<ConsumoPorTipoVeiculo[]>([]);
     const [mes, setMes] = useState<ConsumoPorMes[]>([]);
     const [cidade, setCidade] = useState<ConsumoPorMes[]>([]);
+    const [postosEstado, setPostosEstado] = useState<PostoPorEstado[]>([]);
+    const [mediaPrecoMes, setMediaPrecoMes] = useState<ConsumoPorMes[]>([]);
 
     useEffect(() => {
         DashboardAPI.getAveragePrices().then(setPrices);
         DashboardAPI.getVehicleConsumption().then(setVehicles);
         DashboardAPI.getConsumoPorMes().then(setMes);
         DashboardAPI.getConsumoPorCidade().then(setCidade);
+        DashboardAPI.getPostosPorEstado().then(setPostosEstado);
+        DashboardAPI.getMediaPrecoPorMes().then(setMediaPrecoMes);
     }, []);
 
     return (
@@ -28,7 +33,7 @@ export default function DashboardPage() {
                 <img
                     src={logomarca}
                     height={250}
-                    style={{ objectFit: "contain", margin: "-70px auto 5px" }}
+                    style={{ objectFit: "contain", margin: "-110px auto -80px" }}
                     alt="Logomarca"
                 />
             </div>
@@ -122,22 +127,21 @@ export default function DashboardPage() {
                 <div className="col-12 col-md-5">
                     <div className="card shadow-sm h-100">
                         <div className="card-header bg-primary text-white text-center">
-                            <h5 className="mb-0">Preço Médio</h5>
+                            <h5 className="mb-0">Postos Por Estado</h5>
                         </div>
                         <div className="card-body">
-                            <BarChartPreco data={prices} />
+                            <PizzaPostosEstado data={postosEstado} />
                         </div>
                     </div>
                 </div>
 
-                {/* Gráfico Consumo */}
                 <div className="col-12 col-md-5">
                     <div className="card shadow-sm h-100">
                         <div className="card-header bg-primary text-white text-center">
-                            <h5 className="mb-0">Consumo por Veículo</h5>
+                            <h5 className="mb-0">Media de Preço por Mês</h5>
                         </div>
                         <div className="card-body">
-                            <BarChartVeiculos data={vehicles} />
+                            <BarConsumoMes isMediaPrecoMes={true} data={mediaPrecoMes} />
                         </div>
                     </div>
                 </div>

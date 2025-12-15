@@ -5,23 +5,33 @@ export const api = axios.create({
 });
 
 export const DashboardAPI = {
-    getAveragePrices: async (page = 1, size = 20) => {
-        const res = await api.get(`/dashboard/precos-medios?page=${page}&size=${size}`);
+    getAveragePrices: async() => {
+        const res = await api.get(`/dashboard/precos-medios`);
         return res.data;
     },
 
-    getVehicleConsumption: async (page = 1, size = 20) => {
-        const res = await api.get(`/dashboard/consumo-veiculo?page=${page}&size=${size}`);
+    getVehicleConsumption: async() => {
+        const res = await api.get(`/dashboard/consumo-veiculo`);
         return res.data;
     },
 
-    getConsumoPorMes: async (page = 1, size = 20) => {
-        const res = await api.get(`/dashboard/consumo-mes?page=${page}&size=${size}`);
+    getConsumoPorMes: async() => {
+        const res = await api.get(`/dashboard/consumo-mes`);
         return res.data;
     },
 
-    getConsumoPorCidade: async (page = 1, size = 20) => {
-        const res = await api.get(`/dashboard/consumo-cidade?page=${page}&size=${size}`);
+    getConsumoPorCidade: async() => {
+        const res = await api.get(`/dashboard/consumo-cidade`);
+        return res.data;
+    },
+
+    getPostosPorEstado:async() => {
+        const res = await api.get(`/dashboard/quantidade-estado`);
+        return res.data;
+    },
+
+    getMediaPrecoPorMes:async() => {
+        const res = await api.get(`/dashboard/media-preco-mes`);
         return res.data;
     }
 };

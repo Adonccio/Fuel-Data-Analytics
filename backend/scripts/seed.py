@@ -14,7 +14,7 @@ CIDADES = ["Salvador", "São Paulo", "Rio de Janeiro", "Belo Horizonte", "Curiti
 
 def gerar_dado():
     return {
-        "posto_identificador": fake.cnpj(),
+        "cnpj": fake.cnpj(),
         "posto_nome": fake.company(),
         "cidade": random.choice(CIDADES),
         "estado": random.choice(ESTADOS),
@@ -42,4 +42,4 @@ def enviar_dados(qtd=10):
             print("Erro:", r.status_code, r.text)
 
 if __name__ == "__main__":
-    enviar_dados(200)# Enviar 200 registros
+    enviar_dados(2)# Enviar 200 registros

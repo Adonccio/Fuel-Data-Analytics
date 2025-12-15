@@ -134,8 +134,15 @@ class ConsumoPorMes(BaseModel):
     mes: int
     total_volume: float
 
-    
 
 class ConsumoPorCidadeTop3(BaseModel):
     cidade: str
     total_volume: float
+
+class PostosPorEstado(BaseModel):
+    estado: str
+    quantidade_postos: int
+
+class PrecoPorMes(BaseModel):
+    mes: int
+    preco_medio: float

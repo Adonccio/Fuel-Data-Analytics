@@ -10,7 +10,9 @@ from ..schemas import (
     ConsumoPorTipoVeiculo,
     RegistroHistorico,
     ConsumoPorMes,
-    ConsumoPorCidadeTop3
+    ConsumoPorCidadeTop3,
+    PostosPorEstado,
+    PrecoPorMes
 )
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
@@ -121,6 +123,47 @@ def get_consumo_cidade(db: Session = Depends(get_db)):
         ConsumoPorCidadeTop3(
             cidade=r[0],
             total_volume=float(r[1])
+        )
+        for r in rows
+    ]
+
+
+@router.get("/media-preco-mes")
+def get_media_preco_medio_mes(db: Session = Depends(get_db)):
+    mes = func.extract("month", models.Venda.data_coleta).label("mes")
+    preco_medio = func.avg(models.Venda.preco).label("preco_medio")
+
+    rows = (
+        db.query(mes, preco_medio)
+        .group_by(mes)
+        .order_by(preco_medio.desc())
+        .all()
+    )
+
+    return [
+        PrecoPorMes(
+            mes= r[0],
+            preco_medio= r[1]
+        )
+        for r in rows
+    ]
+
+@router.get("/quantidade-estado")
+def get_quantidade_por_estado(db: Session = Depends(get_db)):
+    rows = (
+        db.query(
+            models.Posto.estado,
+            func.count(func.distinct(models.Posto.cnpj)).label("quantidade_postos")
+        )
+        .group_by(models.Posto.estado)
+        .order_by(func.count(func.distinct(models.Posto.cnpj)).desc())
+        .all()
+    )
+
+    return [
+        PostosPorEstado(
+            estado = r[0],
+            quantidade_postos=r[1]
         )
         for r in rows
     ]

@@ -47,7 +47,7 @@ def get_or_create_veiculo(db: Session, placa: str, tipo: str):
 def create_venda(db: Session, payload: schemas.IngestionPayload):
     posto = get_or_create_posto(
         db,
-        identificador=payload.posto_identificador,
+        cnpj=payload.cnpj,
         nome=payload.posto_nome,
         cidade=payload.cidade,
         estado=payload.estado,

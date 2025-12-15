@@ -4,7 +4,7 @@ from typing import Optional
 
 
 class IngestionPayload(BaseModel):
-    posto_identificador: str
+    cnpj: str
     posto_nome: str
     cidade: str
     estado: str

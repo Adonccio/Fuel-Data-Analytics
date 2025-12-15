@@ -64,7 +64,6 @@ export default function PostoForm({
             {error && <div className="alert alert-danger">{error}</div>}
 
 
-            {/* Nome + CNPJ */}
             <div className="d-flex gap-3 mb-3">
 
                 <div className="flex-grow-1">
@@ -95,7 +94,6 @@ export default function PostoForm({
 
             </div>
 
-            {/* Estado + Cidade */}
             <div className="d-flex gap-3 mb-3">
                 <div className="flex-grow-1">
                     <label className="form-label fw-bold">Estado</label>
@@ -120,7 +118,6 @@ export default function PostoForm({
                 </div>
             </div>
 
-            {/* Botão */}
             <div className="d-flex justify-content-center my-3">
                 <button
                     type="submit"
